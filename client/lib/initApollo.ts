@@ -6,6 +6,7 @@ import {
 import { setContext } from "apollo-link-context";
 import { createHttpLink } from "apollo-link-http";
 import fetch from "isomorphic-unfetch";
+import Cookies from 'js-cookie';
 import { isBrowser } from "./isBrowser";
 
 let apolloClient: ApolloClient<NormalizedCacheObject> | null = null;
@@ -20,25 +21,45 @@ interface Options {
 }
 
 function create(initialState: any, { getToken }: Options) {
+  // use this only in the browser not on the server
+  let accessToken;
+  let hasLoggedInUser;
+  let getCurrentUser;
+
+  if (isBrowser) {
+    hasLoggedInUser = require('./stitchAuthentication').hasLoggedInUser;
+    const { loginAnonymous } = require('./stitchAuthentication');
+    getCurrentUser = require('./stitchAuthentication').getCurrentUser;
+
+    if (!hasLoggedInUser()) {
+      loginAnonymous();
+    }
+  }
+
+  if (hasLoggedInUser && hasLoggedInUser()) {
+    accessToken = hasLoggedInUser() ? getCurrentUser().auth.activeUserAuthInfo.accessToken : '';
+    Cookies.set('accessToken', accessToken);
+    // refresh the page after this load or show a page with login anonymously
+    // on button click then refresh the page
+  }
+
   const httpLink = createHttpLink({
-    uri: "http://localhost:4000/graphql",
+    uri: "https://stitch.mongodb.com/api/client/v2.0/app/recipesapp-tfmxd/graphql",
     credentials: "include"
   });
 
   const authLink = setContext((_, { headers }) => {
-    const token = getToken();
     return {
       headers: {
         ...headers,
-        cookie: token ? `qid=${token}` : ""
+        Authorization: `Bearer ${getToken()}`,
       }
     };
   });
 
-  // Check out https://github.com/zeit/next.js/pull/4611 if you want to use the AWSAppSyncClient
   return new ApolloClient({
     connectToDevTools: isBrowser,
-    ssrMode: !isBrowser, // Disables forceFetch on the server (so queries are only run once)
+    ssrMode: false, // Disables forceFetch on the server (so queries are only run once)
     link: authLink.concat(httpLink),
     cache: new InMemoryCache().restore(initialState || {})
   });
@@ -46,9 +67,9 @@ function create(initialState: any, { getToken }: Options) {
 
 export default function initApollo(initialState: any, options: Options) {
   // Make sure to create a new client for every server-side request so that data
-  // isn't shared between connections (which would be bad)
+  // isn't  shared between connections (which would be bad)
   if (!isBrowser) {
-    return create(initialState, options);
+    apolloClient = create(initialState, options);
   }
 
   // Reuse client on the client-side

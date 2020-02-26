@@ -22,5 +22,11 @@ Use Apollo Client on top of MongoDB. No GraphQL server to start with.
 Features
  - make a page where you can find the health benefits and properties of each ingredient
 
+TODO's
+  - encapsulate endpoint in .env
+  - add Prettier and EsLint https://velog.io/@ykim5470/NEXT.js-setting-with-airbnb-eslint-prettier-application-kqk53l0oso
+
+Tech debt
+
 
 

@@ -30,7 +30,7 @@ export default (App: any) => {
       const apollo = initApollo(
         {},
         {
-          getToken: () => parseCookies(req).qid
+          getToken: () => parseCookies(req).accessToken
         }
       );
 
@@ -73,7 +73,7 @@ export default (App: any) => {
       }
 
       // Extract query data from the Apollo's store
-      const apolloState = apollo.cache.extract();
+      const apolloState = apollo ? apollo.cache.extract(): {};
 
       return {
         ...appProps,
@@ -89,7 +89,7 @@ export default (App: any) => {
       // After that rendering is done using Next's normal rendering pipeline
       this.apolloClient = initApollo(props.apolloState, {
         getToken: () => {
-          return parseCookies().token;
+          return parseCookies().accessToken;
         }
       });
     }

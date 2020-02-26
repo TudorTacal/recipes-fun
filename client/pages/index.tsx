@@ -1,36 +1,48 @@
 // https://recipes-organizer.now.sh/
 import { NextPage } from 'next';
 import { useState } from 'react';
+import { useQuery } from '@apollo/react-hooks';
+import gql from 'graphql-tag';
+
+export const GET_RECIPES = gql`
+  query GetRecipes {
+    recipes {
+      _id
+      name
+      description
+      ingredients {
+        name
+        quantity
+        price
+      }
+    }
+  }
+`;
+
 interface Props {
 
 }
 
 const Home: NextPage<Props> = () => {
-  const [input, setInput] = useState({});
-
-  function handleChange(event) {
-    const { target } = event;
-    const { name, value } = target;
-    setInput({ ...input, [name]: value });
-  }
+  const { data, loading, error } = useQuery<any>(
+    GET_RECIPES,
+    { fetchPolicy: "network-only" }
+  );
+  if (loading) return <p>Loading</p>;
+  if (error) return <p>ERROR: {error.message}</p>;
+  if (data === undefined) return <p>ERROR</p>;
 
   return (
-    <div>
-      <h1>Recipes</h1>
-      <form>
-        <label>Name</label>
-        <input name="name" onChange={handleChange} />
-        <label>Ingredient</label>
-        <input name="ingredient" onChange={handleChange}/>
-        <label>Directions</label>
-        <input name="quantity" onChange={handleChange} />
-        <label>Price</label>
-        <input name="price" onChange={handleChange} />
-        <label>Quantity</label>
-        <input name="directions" onChange={handleChange} />
-        <button>Submit</button>
-      </form>
-    </div>
+    <>
+      {console.dir(data)}
+      {data.recipes && data.recipes.length ? (
+        data.recipes.map((recipe: any) => (
+          <p key={recipe._id}>{recipe.name} {recipe.description}</p>
+        ))
+      ) : (
+        <p>You haven't added any recipes yet</p>
+      )}
+    </>
   );
 }
 export default Home;
