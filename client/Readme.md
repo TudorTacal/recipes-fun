@@ -25,6 +25,7 @@ Features
 TODO's
   - encapsulate endpoint in .env
   - add Prettier and EsLint https://velog.io/@ykim5470/NEXT.js-setting-with-airbnb-eslint-prettier-application-kqk53l0oso
+  - enable prod deployments with Github actions https://github.com/marketplace/actions/zeit-now-deployment
 
 Tech debt
 

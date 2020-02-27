@@ -1,8 +1,9 @@
 // https://recipes-organizer.now.sh/
 import { NextPage } from 'next';
-import { useState } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
+
+import { Recipes } from '../components';
 
 export const GET_RECIPES = gql`
   query GetRecipes {
@@ -19,9 +20,7 @@ export const GET_RECIPES = gql`
   }
 `;
 
-interface Props {
-
-}
+interface Props {}
 
 const Home: NextPage<Props> = () => {
   const { data, loading, error } = useQuery<any>(
@@ -34,11 +33,8 @@ const Home: NextPage<Props> = () => {
 
   return (
     <>
-      {console.dir(data)}
       {data.recipes && data.recipes.length ? (
-        data.recipes.map((recipe: any) => (
-          <p key={recipe._id}>{recipe.name} {recipe.description}</p>
-        ))
+        <Recipes recipes={data.recipes} />
       ) : (
         <p>You haven't added any recipes yet</p>
       )}
