@@ -7,7 +7,6 @@ interface Props {
 }
 
 export const Recipes: React.FC<Props> = ({ recipes }) => {
-  // grid container -> iterate on recipes -> grid item -> Recipe Component
   return (
     <Grid container spacing={3}>
       {recipes.map((recipe: Recipe) =>

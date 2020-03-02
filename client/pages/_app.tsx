@@ -1,7 +1,7 @@
-import App  from "next/app";
-import React from "react";
-import { ApolloProvider } from "react-apollo";
-import withApollo from "../lib/withApollo";
+import App from 'next/app';
+import React from 'react';
+import { ApolloProvider } from 'react-apollo';
+import withApollo from '../lib/withApollo';
 
 // wraps all components in Pages
 class MyApp extends App<any> {

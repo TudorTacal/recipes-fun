@@ -3,11 +3,9 @@ import { useState } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 
-interface Props {
-
-}
+interface Props {}
 const AddRecipe: NextPage<Props> = () => {
- const [input, setInput] = useState({});
+  const [input, setInput] = useState({});
   function handleChange(event) {
     const { target } = event;
     const { name, value } = target;
@@ -21,7 +19,7 @@ const AddRecipe: NextPage<Props> = () => {
         <label>Name</label>
         <input name="name" onChange={handleChange} />
         <label>Ingredient</label>
-        <input name="ingredient" onChange={handleChange}/>
+        <input name="ingredient" onChange={handleChange} />
         <label>Directions</label>
         <input name="quantity" onChange={handleChange} />
         <label>Price</label>
@@ -32,5 +30,5 @@ const AddRecipe: NextPage<Props> = () => {
       </form>
     </div>
   );
-}
+};
 export default AddRecipe;

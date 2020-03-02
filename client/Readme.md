@@ -14,8 +14,10 @@ https://www.compose.com/articles/using-graphql-with-mongodb/
 https://github.com/maxeuler/nextJS-graphQL-mongoDB-starter
 
 Tasks
-1. Hook-up MongoDB through GraphQL
-2. Create a form to submit a receipe info
+ - create
+ - read
+ - update
+ - delete
 
 Use Apollo Client on top of MongoDB. No GraphQL server to start with.
 
